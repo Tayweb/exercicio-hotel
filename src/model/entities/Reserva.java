@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exceptions.DomainException;
+
 public class Reserva {
 
 	private Integer numeroQuarto;
@@ -12,7 +14,12 @@ public class Reserva {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	public Reserva(Integer numeroQuarto, Date dataEntrada, Date dataSaida) {
+	public Reserva(Integer numeroQuarto, Date dataEntrada, Date dataSaida) throws DomainException {
+	
+	if (!dataSaida.after(dataEntrada)) {
+		throw new DomainException("Erro de reserva: A data de saída tem que ser depois da data de entrada.");
+	}
+	
 		this.numeroQuarto = numeroQuarto;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
@@ -39,19 +46,16 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS); // conversão de milesegundos para dias
 	}
 
-	public String updateDates(Date dataEntrada, Date dataSaida) {
+	public void updateDates(Date dataEntrada, Date dataSaida) throws DomainException {
 		
 		Date now = new Date();
 		if (dataEntrada.before(now) || dataSaida.before(now)) {
-			return"Erro de reserva: As datas tem que ser futuras";
-		}if (!dataSaida.after(dataEntrada)) {
-			return"Erro de reserva: A data de saída tem que ser depois da data de entrada.";
+			throw new DomainException ("Erro de reserva: As datas tem que ser futuras");
 		}
-		
 		
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
-		return null;
+	
 		
 	}
 
