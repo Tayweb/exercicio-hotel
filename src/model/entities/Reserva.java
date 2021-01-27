@@ -39,9 +39,20 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS); // conversão de milesegundos para dias
 	}
 
-	public void updateDates(Date dataEntrada, Date dataSaida) {
+	public String updateDates(Date dataEntrada, Date dataSaida) {
+		
+		Date now = new Date();
+		if (dataEntrada.before(now) || dataSaida.before(now)) {
+			return"Erro de reserva: As datas tem que ser futuras";
+		}if (!dataSaida.after(dataEntrada)) {
+			return"Erro de reserva: A data de saída tem que ser depois da data de entrada.";
+		}
+		
+		
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
+		return null;
+		
 	}
 
 //	public void imprimir() {
